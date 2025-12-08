@@ -1,0 +1,68 @@
+What is Protocol? Set of rules, set of instructions. 
+
+Client is someone who gives the requirement. Developer is someone who creates the application based on client requirements. But someone has to give access to end-users to use or access the application. For this we have to create a server then deploy the application into the server and then access will be provided to end-users. DevOps main work is application deployment and cloud operations. 
+
+Networking: 
+What is Server? 
+Every server can be public and private. The server which accepts requests directly from the internet this server should be public. User to server is external communication. Internet and Public IP is required for server to access from external requests. Private IP we use for internal server communication. Server public IP globally unique. 
+Server where we deploy application is always private.
+Dynamic IP always changes with server status.
+Static IP remains same with server status. 
+
+AWS has 38+ Regions, 108+ AZs, and 400+ Edge Locations. 
+Edge Locations works like a cache. 
+
+Note: Any Linux server login purpose SSH 22 is mandatory.
+
+After we create and launch an instance. Now the server is in running state. So to connect to the server there are 3 options.
+1. MobaXterm
+2. Putty
+3. Gitbash
+4. Terminal
+5. EC2 connect
+
+
+1. To use MobaXterm, download it, install it. Click on Session, Click SSH, Enter public Id of the target server in Remote host field. Get the public Id of the server from Instance section. 
+Click on Advance SSH Settings, check use private key and upload the downloaded private key. Enter username as ec2-user (this is default username, later we can change the username). Now we are in inside US East 1 Server not in my laptop. 
+This is the process to connect server from MobaXterm tool. 
+
+Behind the scene: First using internet my request goes into network and hit SG. If SG allows then request will go inside the server. First SG will be validated, then key will be validated. 
+
+Note: If in my SG I have configured custom IP and I have given my laptop IP after VPN 115.98.192.74/32. SG will validate if the incoming IP matches or not then private key will be validated. In this case If I give my private kye to someone else, and that person tries to connect to the server with this private key, even private key is same but IP is different so the request will be blocked at SG level only. 
+
+If in my SG I have configured 0.0.0.0 means allow any IP then in this case other developers also can access the server. 
+
+
+2. Using Instance Connect method: In AWS Console. Click on Instance, then click on Connect and done. In this no private key is required because we are already logged in to our account. This is keyless connect. This will only connect to public IP's not private IP's.  
+
+
+3. Using Terminal 
+command: ssh -i "C:\Users\Pradeep\Downloads\devopsnareshitveer.pem (private key)" ec2-user@3.208.15.114 (public IP)
+
+
+Note: If we want to edit the Instance configuration like increasing RAM then go to Actions and change whatever we want. 
+
+
+Elastic IP always public.
+What is Elastic IP, what its use?
+By default Public IP is dynamic, it will change if instace stop and start.
+I we want to assign static public IP, we can create Elastic IP and assign to ec2 it will remains same even instance stop and start. 
+Elastic IP is chargeable, so first disassociate it and then release it to delete completely. 
+
+Difference between Dynamic IP and Elastic IP?
+
+
+What is CIDR?
+
+For connecting to EC2 in US-East 1, there is not one single "default" range; you need different IPs for different connection methods: for the console based EC2 Instance Connect, use the specific range like 18.206.107.24/29
+
+
+How to create custom Network? 
+We can prepare our own network in AWS. First we should create our own VPC. Earlier we were using default VPC provided by AWS. then we will go for Subnets.
+There are two types of Subnets Private and Public. We can make Subnets public or private via configuration. By default if we create any Subnet, it will be Private, we can configure it to be Public. 
+Whenever we are creating VPC, VPC should accept internet from external first. AWS provides one device so VPC will get internet. The device is Internet Gateway. We need to attach Internet gateway to VPC. Now to make Subnet as public we need to attach Internet Gateway to Subnet also. This we can do via Routing. Router is the device to attach Internet Gateway to Subnet to make it Public. In AWS we call this Router as Route Table. Now establish a connection from Internet Gateway to Route Table then another connection from Route Table to Subnet. Now this Subnet is Public Subnet. 
+So if we want to create Public Subnet in AWS, there is no direct approach. Create a Subnet provide Internet from Route Table and provide the routing from Internet Gateway to Route Table. 
+If I want to create one more Public Subnet, no need to create another Route Table, just attach this Route Table to the newly created Public Subnet. 
+
+
+What is Internet Gateway with respect to AWS?

@@ -1,0 +1,64 @@
+If I need to create a server, first I need to select a region and create a VPC, inside the VPC create a subnet. The subnets count depends on the VPC size. Inside the subnets we can create the servers. Server count depends on the Subnet size. 
+VPC works region specific. Subnets works AZs specific. 
+If you want to create servers to get high availability across AZs, you should create two subnets. We cannot create servers directly inside VPC, Subnets are mandatory to create any server. And to create a Subnet VPC is mandatory. Subnets depends on VPC and Server depends on Subnets.
+
+In AWS each client gets their own VPC which provides isolated network inside same region even though if Az's are same. 
+
+High availability across AZs: Yes
+High availability across Region: No (If Region down all AZs inside that Region is down).
+
+There are some requirements:
+1. I have to create 2 servers with high availability across AZs: 
+Ans: In this case, First create VPC if does not exist. Minimum 2 Subnets 1a and 1b are required to get high availability servers in different AZs. We can create single Subnet also but in the case of failure there will be no high availability. That's why 2 Subnets are required. Create 2 Subnets in different AZs. 
+If I have to create 4 servers with high availability, 2 Subnets are required, create 2 servers each in 2 Subnets. 
+
+2. I have to create a 4 servers with conditions: Server 1 should accept public traffic. Server 2 should accept private traffic. Server 3 only accepts Database traffic. Server 4 only for testing purpose.
+Ans: In this case 4 Subnets are required. First Subnet should contain public instance. Second Subnet should contain private instance and so on. 
+
+3. I want to deploy Flipcart application. In this process I have to create 20 servers, in this case how many Subnets are required?
+Ans: Each server will have same application FlipCart, just to balance the load we need 20 servers. In this case one VPC is required, inside this VPC, we need to create 2 Subnets, each should contain 10 servers. This is how we achieved high availability and disaster recovery. 
+
+
+Suppose there is a VPC of US Region, Inside VPC there are two Subnets 1a and 1b, FlipKart application server created in both the subnets. Subnets are always private. So how external users can access private servers in private subnet. 
+In public IP, the request should be accept over the internet, and private IP, the request should be accepted internal routing only. 
+If User wants to access FlipCart server, users requires Server IP, and the IP should be public. But the server is private. So its not possible that user directly access the private server. Then how the communication happens. The answer is Proxy concept. Proxy works like a medium between Public and Private Servers. This Proxy should accept Public IP request thats why Proxy has to be the Public not Private. This Proxy acts like a Public Server. So Cloud providers has to define this Public Proxy Server inside a Public Subnet because server can only be create inside Subnet. So when end user makes the request to FlipCar application, the request first goes to Public Server which is Proxy Server which accepts public IP requests, then this proxy further process the request and send to the actual FlipCart application which is hosted on a private server inside private subnet. So user does not have any idea of IP of actual FlipCart hosted servers location. So this is secure also. Public request is accessing a Proxy server this Proxy server sends the request to actual server which is private. where the application is hosted.
+
+This Proxy server requires a high availability, so in this case create 2 Subnets and create 2 Proxy Servers.
+AWS, Azure, GCP provide this Proxy Servers as Load Balancer service so we dont have to create these Proxy Servers. So the Load Balancer will accepts the requests from the end users and direct those requests to actual private servers. All Load Balancer (Load Balancer DNS) thing will be taken care by AWS. But for this Load Balancer servers service we need to create Public Subnets. Minimum 2 public subnets required each subnet per AZ for high availability purpose.  
+
+Autoscaling, How Autoscaling works?  
+
+We can create Web Server, App Server, DB Server in the same subnet. We can apply security for each layer, server layer, subnet layer and VPC layer. If we apply Subnet level security, then all servers inside that subnet will be secured. What If I don't want security for my Web Server but want for remaining two servers. This is not possible. Subnet level security will be applied to all servers present inside that Subnet. To achieve separate security we need to create servers in different Subnets and then apply Subnet level security. 
+
+
+
+
+AWS Offers 3 types of Services:
+1. Global level services: DNS
+2. Region level services: VPC, LB (Load Balancer), ASG (Autoscaling Group)
+3. Availability zone level services: EC2, Subnet
+
+Inside Global layer, we have Region layer. Inside Region layer, we have AZ layer. 
+Global layer services can easily control Region layer services. Region layer services can control AZ layer services. 
+Load Balancer helps public IPs to access the application. Public can access Flipcart application using Load Balancer. 
+Bastion Host is used to login a private server. Flipcart internal developers uses Bastion Host server to connect to FlipCart server. Develops internal team can use a Bastion Server to login to private server to do some activity. 
+Who use Bastion Server and who use Load Balancer?
+
+Example: A developer developed an Amazon application. DevOps team deploy the application to AWS Server. It is not possible for a developer or DevOps team to directly deploy the application to AWS Servers. Thats why Developer first uses Public server to enter into the network and from inside the network then connect to private server. 
+So Developer, Tester, DevOps any team wants to login to private server first they need one public server to enter into AWS VPC Network and then connect AWS private Server. Bastion Host Server is used to accept request from internal team and then direct the request to private server. 
+
+What is Bastion Host Server: A server can give a platform to connect (login) private servers. 
+Bastion server is for internal team to login private servers to modify or deploy application. 
+
+Now Application has been deployed, now end users are ready to access the application. In this case Load Balancer is required to access the FlipCart server. This Load balancer required 2 subnets.  
+Load Balancer is for end users to access application after deployed into private servers by internal team. 
+Load Balancer has their own scaling mechanism, all taken care by AWS.
+
+
+TL asked to deploy an application into AWS, what are the requirements to ask?
+1. Choose Region
+2. Create VPC
+3. Create minimum 4 Subnets, 2 for Public to configure to Load Balancer, 2 for private to deploy application across AZ
+4. Create Bastion Host Server to login to private Server
+5. Create Load Balancer on two public subnets
+6. Autoscaling configuration for server scalability

@@ -1,0 +1,41 @@
+How many important components are there in the server? To create server in any of the cloud these are required.
+1. Operating System (AMI - Amazon Machine Image)
+2. Hardware, CPU, RAM (Instance Type), Hard disk -> EBS
+3. Network selection (VPC and Subnet)
+4. Firewall (Security Group)
+5. Server Password (Key pair)
+
+Lab 1: Creating our first Server in AWS Console
+Server is the one of the service AWS provide which is EC2.
+AWS EC2 (Elastic Compute Cloud): Elastic means we can stretch this means we can scale the server up and down.
+EC2 is a virtual server. From our point of view its a virtual server but from AWS point of view this is physical server. This server related to anything is taken care by AWS. Out job is to pick, create, and use and pay for what we use. Elastic means anytime we can increase, decrease, create, delete the servers. 
+
+Steps to create a server in AWS Console:
+1. Click on launch Server Instance. 
+2. Give a name.
+3. Select t3.micro as instance type for CPU and RAM selection. (t means tiny series).
+4. Key pair selection: You can use a key pair to securely connect to your instance. Ensure that you have access to the selected key pair before you launch the instance. 
+We have two types of keys public and private. Suppose there are two developers and a server. Public key will be stored in server. Private key will be encrypted and downloaded to one of developers laptop. So other developer will not be able to access the server since he does not have the private key. 
+AWS provides default VPC and Subnet for practice. 
+We can create a new key pair. There are two encryption method types. Also we have two types of file format .pem and .ppk. 
+Two keys will be created immediately. 
+Same key for multiple servers. 
+Whatever keys we are selecting for the server, we must have access to that key. Public and Private Key are like username and password. 
+
+5. Firewall: We call Security Groups in AWS. We need to configure what to authorize, we do this using SG Rules. We have to create a few set of rules that control or allow Security Group we can attach to server level. The rules we can configure here. 
+Suppose there are 2 developers, We need to configure or write a rule in SG in server like allow only a specific developer and block others. The identification of developers will be done via IP only. Dev 1 IP: 192.168.1.2, Dev 2 IP: 192.168.1.3. Allow only Dev 1. Block all IPs except Dev 1 IP. 
+For ex Server IP is 173.1.2.3. The Developers will need to hit 173.1.2.3 to access the server also developer need to attach specific port of which part of the application Developer is trying to access, mobile application or web application. For example 2 different applications are running on port 3000 and 5000. Example 173.1.2.3:3000.
+If we want to control we can whitelist specific IP+port number in SG rules. 
+
+There are two types of Rules: Inbound and Outbound. 
+Inbound means External to Server. Inbound rule by default does not allow any traffic until create a rule (by default blocks all traffic).
+Outbound means Server to External.  
+We can create many rules in SG. By default we can create up to 60 rules. We can attach multiple SGs to same server. 
+Why use VPN? What if Developers IP changed? If Developer uses company VPN, same IP will be allocated and then they can access the server. 
+
+What is Port? 
+Its logical endpoint inside the server by implementing port concept I can run many applications inside the same server each application each port. 
+If you want to allow give 0.0.0.0 or you can select myIP or enter custom IP.
+
+
+CIDR Block Concept? 172.3.1.3/32 What is 32?
