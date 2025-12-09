@@ -1,0 +1,201 @@
+Java Developer Roadmap:
+1. Java Introduction:
+. Java Intro
+. Java Program Lifecycle
+. Java Syntax
+. Java Output
+. Keywords and Identifiers
+. Comments
+. Variable
+. Literals
+. Data Types
+. Type Casting
+. Operators
+. Operator Precedence	
+. Math
+. Booleans
+. Scanner Class
+. Input/Output
+. Expressions, Statements and Blocks
+. Command-Line Arguments
+. Annotations
+. RegEx
+
+
+2. Java Flow Control
+. Java if..else Statement
+. Ternary Operator
+. For Loop
+. for-each loop
+. While Loop
+. do..while loop
+. break Statement
+. continue Statement
+. Nested Loop
+. switch Statement
+
+
+3. Java Arrays
+. Java Arrays
+. Multidimensional Arrays
+. Copy Arrays
+. Deep Copy vs Shallow Copy
+
+
+4. Java OOP(1)
+. Classes/Objects
+. Java Methods
+. Method Overloading
+. Constructors
+. static keyword
+. Strings
+. Access Modifiers
+. this Keyword
+. final Keyword
+. Recursion
+. instanceOf Operator
+. Iterator 
+
+
+5. Java OOP(2)
+. Inheritance
+. Method Overriding
+. super Keyword
+. Abstract Class and Abstract Methods
+. Interface
+. Polymorphism
+. Encapsulation
+
+
+6. Java OOP(3)
+. Nested and Inner Class
+. Nested Static Class
+. Anonymous Class
+. Singleton Class
+. Wrapper Classes
+. Autoboxing and Unboxing
+. enums
+. enum Constructor
+. enum Strings
+. Reflection
+. Package
+. Record
+. Pass by Value / Pass by Reference
+. Lambda Expressions
+. Generics
+
+
+
+7. Java Exception Handling
+. Exceptions
+. Exception Handling
+. try..catch
+. throw and throws
+. catch multiple Exceptions
+. try-with-resources
+. Annotations
+. Annotation Types
+. Logging
+. Assertions
+
+
+8. Java List
+. Java Collections Framework
+. Collection Interface
+. List
+. ArrayList
+. Vector
+. Stack Class
+
+
+9. Java Queue
+. Java Queue Interface
+. PriorityQueue
+. Deque Interface
+. LinkedList
+. ArrayDeque
+. BlockingQueue
+. ArrayBlockingQueue
+. LinkedBlockingQueue
+
+
+10. Java Map
+. Java Map Interface
+. HashMap
+. LinkedHashMap
+. WeakHashMap
+. EnumMap
+. SortedMap Interface
+. NavigableMap Interface
+. TreeMap
+. ConcurrentMap Interface
+. ConcurrentHashMap
+
+
+11. Java Set
+. Java Set Interface
+. HashSet Class
+. EnumSet
+. LinkedHashSet
+. SortedSet Interface
+. NavigableSet Interface
+. TreeSet
+. Algorithms
+. Iterator Interface
+. ListIterator Interface
+
+
+12. Java 8 Features
+. Lambda Expressions
+. Functional Interfaces
+. Method Reference
+. Default and Static Methods
+. Streams
+. Comparable and Comparable
+. Optional Class
+. Date/Time API
+
+
+
+13. Java I/O Streams
+. I/O Streams
+. InputStream Class
+. OutputStream Class
+. FileInputStream Class
+. FileOutputStream Class
+. ByteArrayInputStream Class
+. ByteArrayOutputStream Class
+. ObjectInputStream Class
+. ObjectOutputStream Class
+. BufferedInputStream Class
+. BufferedOutputStream Class
+. PrintStream Class
+
+
+14. Java File Handling Reader/Writer
+. File Class
+. Reader Class
+. Writer Class
+. InputStreamReader Class
+. OutputStreamWriter Class
+. FileReader Class
+. FileWriter Class
+. BufferedReader
+. BufferedWriter Class
+. StringReader Class
+. StringWriter Class
+. PrintWriter Class
+
+
+15. Java Multithreading
+. Introduction to Multithreading
+. Processes vs Threads
+. Thread Class and Runnable Interface
+. Thread Lifecycle
+. Thread Methods
+. Thread Priorities
+. Synchronization
+. Inter-thread Communication
+. Deadlock
+. Thread Safety
+
