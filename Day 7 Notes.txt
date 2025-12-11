@@ -1,0 +1,47 @@
+In AWS By default if we create any Subnet, the Subnet will be Private Subnet. AWS provided Subnet is Public Subnet. 
+We need to make the Private Subnet to Public. We can do this by configuration. 
+If multiple VPCs are there, then they can communicate to each other using Internet.
+If services inside VPC wants to communicate across Regions, means one service of one Region wants to communicate with another service of another Region. 
+To provide the internet between services in a VPC we use Internet Gateway. If there are 3 different VPCs, we can create one IGW and create a connection to all other VPCs, so this way all VPCs will have internet to their services. We can also attach individual IGW to VPCs.  
+
+
+
+
+
+
+
+Two VPCs by default do not communicate whether they are in the same region, different regions, or different accounts. 
+If two Servers running in a different VPCs, VPC-A, VPC-B. Two different VPCs inside resources will not communicate with each other.
+Same VPC inside resources communicate by default. 
+If we have to enable communication between these two different VPCs, then we need to use VPC Peering. 
+
+Suppose there are 2 resources, one resource is inside VPC and another resource is at Global layer which is S3 Bucket. So how this two will communicate to each other. The request will travel from VPC which has a Public Subnet to S3 Bucket via Internet only. 
+Inside Subnet we a server. The Server will Internet through Route Table and IGW. So VPC should have IGW and Subnet should have Route Table. So IGW to Route Table then Route Table to Subnet communication will be there. 
+
+So Server will communicate to S3 Bucket via IGW. 
+
+If the Subnet does not have Internet, then how both will communicate. 
+
+Similarly If both VPCs have Public Subnets they can use IGW and establish connection. But what If the VPCs have Private Subnets then how both VPCs will communicate. In this case we will use VPC Peering. If we use VPC Peering for communication then both VPCs will act as a same Network. 
+
+
+Suppose there is VPS which has Private Subnet server and wants to communicate to S3. in this case there is not IGW. So we will use VPC Endpoint for communication. 
+
+Difference between VPC Peering and VPC endpoint?
+VPC Peering and Endpoint behavior is same But VPC Peering is from VPC to VPC (VPC inside resource want to communicate internally to another VPC inside resource, If both resources are public then no need to use VPC Peering just use IGW, request will go through IGW)
+
+ VPC Endpoint is VPC to VPC Outside S3 (Internal communication between VPC inside resource to VPC outside resource but both resources should be in same AWS. Ex: VPC inside EC2 trying to connect VPC Outside resource S3 Bucket internally)
+If my server is public no need any VPC endpoint it will connect through IGW. 
+
+
+Suppose there are 3 VPCs A,B, and C. A is communicating to B via VPC Peering. B is communicating to C via VPC Peering. In this way we cannot communicate from A to C. VPC Peering is OneToOne communication only. But if we really want to communicate from A to C then use one more VPC Peering from A to C. 
+
+
+But If I want to communicate one VPC to Multiple VPC then in this case we can use Transit Gateway concept. 
+
+
+Suppose in a VPC two Subnets are there Public and Private and respective Public and Private Servers. VPC has IGW and Route Table. 
+If Public Server wants a Python code which is outside of VPC then request will go through Route Table -> IGS -> Python Code then return back the same to Public Server. 
+Suppose now my Private Server wants Python code outside of VPC. In this case we cannot use Route Table and IGW because its not secure. In this case we will use a concept NAT Gateway(Network Access Translation). This NAT gateway provide secure internet to private servers. We should keep NAT Gateway inside Public Subnet. Now create one more Route Table, so NAT Gateway to Route Table 2 then to Private Subnet.
+
+How NAT Gateway provides Security. 
