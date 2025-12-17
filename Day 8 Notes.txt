@@ -1,0 +1,50 @@
+AWS provides by default VPC and Subnets but we should create our own VPC and Subnets. When we create VPCs by default one Route Table will be created. 
+During creation of VPCs we have to decide the size of the VPC, based on the size we can create Subnets and based on Subnet size we can deploy number of Servers. 
+
+
+Servers have 2 IPS, Public and Private IPs. 
+Private IP series: 10.x.x.x, 192.x.x.x, 172.x.x.x. Private IPs starts from either one of these IPs. Remaining all we can use of Public Servers. Private IPs we use only for Internal Communications. Public IPs for External Communications. 
+
+Servers count depends on Subnet size, and Subnets size depends on VPC size. 
+During VPC creation, we can change the name of the VPC after creation, but we cannot do this in Azure and GCP.
+
+How come 10.0.0.0/24 have 256 IPs. 
+How Subnets divide these IPs.  
+
+If I specify 10.0.0.0/24, then internally CIDR will generate list of IPs. 
+Refer to diagram for more clarity.
+Here 24 is net mast value. 
+
+How to calculate how many IPs this VPC will generate?
+32-24=8, 2 power 8 = 8 256. This VPC will generate total 256 IPs. These Ips we can use for internal network. If we create one server then this server will take one IP from 256 IPs. 
+IP range will start from 10.0.0.0 to 10.0.0.255. It means if we create any servers or resources, these resources will take IP from this list only.
+
+Private IPs are unique inside VPC only not Globally. How and Why?
+Public IP are globally unique. How?
+
+When we are creating Subnets we need to divide the IPs to Subnets. We can divide equally or we can select all IP for a single Subnet but other Subnets wont have any IP then. 
+
+Explain NetMask value. Why use NetMask value?
+
+Creation of Custom Network:
+Create a VPC with 10.0.0.0/16 as CIDR. Now create two Subnets. By default Subnets will be private. Subnets CIDR range in the range of VPC are equal the range of VPC not beyond the range. Subnet CIDR range should be in the range of VPC. Subnet 1- 10.0.1.0/24 and 10.0.2.0/24. 
+	1. Create a VPC
+	2. Create subnets
+	3. Create IGW and attach to VPC
+	4. Create a Route Table
+	5. Enable connection between IGW to Route Table
+	6. Enable Subnet association to Route Table
+	7. Create Servers inside the Subnets
+
+For each Subnet, AWS uses 5 IPs for internal communication. First 4 IPs 10.0.0.0, 10.0.0.1, 10.0.0.2, 10.0.0.3, and last IP 10.0.0.255.
+For every Subnet, the following IPs are not usable by your resources:
+	1. Network Address: First IP of CIDR
+	2. VPC Router: Second IP
+	3. DNS: Third IP
+	4. Future use: Fourth IP
+	5. Broadcast Address: last IP in CIDR (even though VPC does not support broadcast)
+
+Example: Subnet CIDR: 10.0.0.0/24 (total 256 IPs, how? Explain me)
+Reserved by AWS: 10.0.0.0, 10.0.0.1, 10.0.0.2, 10.0.0.3, 10.0.0.255
+Usable IPs: 10.0.0.4 -> 10.0.0.254. 251 usable IPs. 
+
