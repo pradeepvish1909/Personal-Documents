@@ -1,50 +1,114 @@
-resource "aws_vpc" "this" {
-  cidr_block = var.vpc_cidr
-
-  tags = {
-    Name = var.environment
-  }
-}
-resource "aws_subnet" "this" {
-  for_each = var.subnets
-
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = each.value.cidr
-  availability_zone = each.value.az
-}
-resource "aws_db_subnet_group" "sub_grp" {
-  name       = "${var.environment}-db-subnet-group"
-  subnet_ids = [for s in aws_subnet.this : s.id]
-
-  tags = {
-    Name = "My DB subnet group"
-  }
-}
-resource "aws_db_instance" "default" {
-  allocated_storage            = var.db_allocated_storage
-  db_name                      = var.db_name
-  identifier                   = var.db_identifier
-  engine                       = var.db_engine
-  engine_version               = var.db_engine_version
-  instance_class               = var.db_instance_class
-  username                     = "test"
-  manage_master_user_password  = true
-
-  db_subnet_group_name = aws_db_subnet_group.sub_grp.name
-  #parameter_group_name = var.parameter_group_name
-
-  backup_retention_period = var.backup_retention_period
-  backup_window           = var.backup_window
-
-  #monitoring_interval = var.monitoring_interval
-  #monitoring_role_arn = aws_iam_role.rds_monitoring.arn
-
-  maintenance_window  = var.maintenance_window
-  deletion_protection = var.deletion_protection
-  skip_final_snapshot = var.skip_final_snapshot
+# ---------- General ----------
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
 }
 
-resource "aws_s3_bucket" "name" {
-    bucket = var.bucket
-  
+variable "environment" {
+  description = "Environment name"
+  type        = string
+  default     = "dev"
+}
+
+# ---------- VPC ----------
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+}
+
+variable "subnets" {
+  description = "Subnet configuration"
+  type = map(object({
+    cidr = string
+    az   = string
+  }))
+}
+
+# ---------- RDS ----------
+variable "db_identifier" {
+  description = "RDS instance identifier"
+  type        = string
+  default = "devtest"
+}
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+}
+
+variable "db_engine" {
+  description = "Database engine"
+  type        = string
+  default     = "mysql"
+}
+
+variable "db_engine_version" {
+  description = "Database engine version"
+  type        = string
+  default     = "8.0"
+}
+
+variable "db_instance_class" {
+  description = "RDS instance class"
+  type        = string
+  default = ""
+}
+
+variable "db_allocated_storage" {
+  description = "Allocated storage in GB"
+  type        = number
+  default = 8
+}
+
+variable "db_username" {
+  description = "Master DB username"
+  type        = string
+  default = ""
+}
+
+# variable "parameter_group_name" {
+#   description = "DB parameter group"
+#   type        = string
+# }
+
+variable "backup_retention_period" {
+  description = "Backup retention in days"
+  type        = number
+  default     = 7
+}
+
+variable "backup_window" {
+  description = "Preferred backup window"
+  type        = string
+  default = ""
+}
+
+variable "maintenance_window" {
+  description = "Maintenance window"
+  type        = string
+  default = ""
+}
+
+# variable "monitoring_interval" {
+#   description = "Enhanced monitoring interval"
+#   type        = number
+#   default     = 60
+# }
+
+variable "deletion_protection" {
+  description = "Enable deletion protection"
+  type        = bool
+  default     = true
+}
+
+variable "skip_final_snapshot" {
+  description = "Skip final snapshot on delete"
+  type        = bool
+  default     = true
+}
+
+variable "bucket" {
+  default = ""
+  type = string
 }
