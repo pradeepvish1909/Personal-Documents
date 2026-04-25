@@ -1,114 +1,49 @@
-# ---------- General ----------
-variable "region" {
-  description = "AWS region"
-  type        = string
-  default     = "us-east-1"
-}
+module "db" {
+  source = "terraform-aws-modules/rds/aws"
 
-variable "environment" {
-  description = "Environment name"
-  type        = string
-  default     = "dev"
-}
+  identifier = "demodb"
 
-# ---------- VPC ----------
-variable "vpc_cidr" {
-  description = "CIDR block for VPC"
-  type        = string
-}
+  engine            = "mysql"
+  engine_version    = "8.0"
+  instance_class    = "db.t3.micro"
+  allocated_storage = 5
 
-variable "subnets" {
-  description = "Subnet configuration"
-  type = map(object({
-    cidr = string
-    az   = string
-  }))
-}
+  db_name  = "demodbbb"
+  username = "user"
+  port     = "3306"
 
-# ---------- RDS ----------
-variable "db_identifier" {
-  description = "RDS instance identifier"
-  type        = string
-  default = "devtest"
-}
+  #iam_database_authentication_enabled = true
+   manage_master_user_password = true
 
-variable "db_name" {
-  description = "Initial database name"
-  type        = string
-}
+  vpc_security_group_ids = ["sg-0bebc6bd7410e6882"]
 
-variable "db_engine" {
-  description = "Database engine"
-  type        = string
-  default     = "mysql"
-}
+  maintenance_window = "Mon:00:00-Mon:03:00"
+  backup_window      = "03:00-06:00"
 
-variable "db_engine_version" {
-  description = "Database engine version"
-  type        = string
-  default     = "8.0"
-}
+  # Enhanced Monitoring - see example for details on how to create the role
+  # by yourself, in case you don't want to create it automatically
+  #monitoring_interval    = "30"
+  #monitoring_role_name   = "MyRDSMonitoringRole"
+  #create_monitoring_role = true
 
-variable "db_instance_class" {
-  description = "RDS instance class"
-  type        = string
-  default = ""
-}
+  tags = {
+    Owner       = "user"
+    Environment = "dev"
+  }
 
-variable "db_allocated_storage" {
-  description = "Allocated storage in GB"
-  type        = number
-  default = 8
-}
+  # DB subnet group
+  create_db_subnet_group = true
+  subnet_ids             = ["subnet-01758d52b48c67d4e", "subnet-0cb1bc154bbea15fb"]
 
-variable "db_username" {
-  description = "Master DB username"
-  type        = string
-  default = ""
-}
+  # DB parameter group
+  family = "mysql8.0"
 
-# variable "parameter_group_name" {
-#   description = "DB parameter group"
-#   type        = string
-# }
+  # DB option group
+  major_engine_version = "8.0"
 
-variable "backup_retention_period" {
-  description = "Backup retention in days"
-  type        = number
-  default     = 7
-}
+  # Database Deletion Protection
+  deletion_protection = true
 
-variable "backup_window" {
-  description = "Preferred backup window"
-  type        = string
-  default = ""
-}
-
-variable "maintenance_window" {
-  description = "Maintenance window"
-  type        = string
-  default = ""
-}
-
-# variable "monitoring_interval" {
-#   description = "Enhanced monitoring interval"
-#   type        = number
-#   default     = 60
-# }
-
-variable "deletion_protection" {
-  description = "Enable deletion protection"
-  type        = bool
-  default     = true
-}
-
-variable "skip_final_snapshot" {
-  description = "Skip final snapshot on delete"
-  type        = bool
-  default     = true
-}
-
-variable "bucket" {
-  default = ""
-  type = string
+  
+  
 }
