@@ -1,55 +1,50 @@
-import os
-import pymysql
+resource "aws_vpc" "this" {
+  cidr_block = var.vpc_cidr
 
-# Database settings from environment variables
-db_host = os.environ['DB_HOST']
-db_user = os.environ['DB_USER']
-db_pass = os.environ['DB_PASS']
-new_db_name = "test"  # Change as needed
-table_name = "mytable"  # Change as needed
+  tags = {
+    Name = var.environment
+  }
+}
+resource "aws_subnet" "this" {
+  for_each = var.subnets
 
-# Establish a database connection
-def connect_to_rds():
-    connection = pymysql.connect(
-        host=db_host,
-        user=db_user,
-        password=db_pass,
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    return connection
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = each.value.cidr
+  availability_zone = each.value.az
+}
+resource "aws_db_subnet_group" "sub_grp" {
+  name       = "${var.environment}-db-subnet-group"
+  subnet_ids = [for s in aws_subnet.this : s.id]
 
-# Lambda function handler
-def lambda_handler(event, context):
-    try:
-        connection = connect_to_rds()
-        with connection.cursor() as cursor:
-            # Create a new database
-            create_db_sql = f"CREATE DATABASE IF NOT EXISTS {new_db_name};"
-            cursor.execute(create_db_sql)
+  tags = {
+    Name = "My DB subnet group"
+  }
+}
+resource "aws_db_instance" "default" {
+  allocated_storage            = var.db_allocated_storage
+  db_name                      = var.db_name
+  identifier                   = var.db_identifier
+  engine                       = var.db_engine
+  engine_version               = var.db_engine_version
+  instance_class               = var.db_instance_class
+  username                     = "test"
+  manage_master_user_password  = true
 
-            # Select the new database
-            cursor.execute(f"USE {new_db_name};")
+  db_subnet_group_name = aws_db_subnet_group.sub_grp.name
+  #parameter_group_name = var.parameter_group_name
 
-            # Create a new table
-            create_table_sql = f"""
-            CREATE TABLE IF NOT EXISTS {table_name} (
-                id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-            """
-            cursor.execute(create_table_sql)
+  backup_retention_period = var.backup_retention_period
+  backup_window           = var.backup_window
 
-            print(f"Database '{new_db_name}' and table '{table_name}' success.")
-            return {
-                'statusCode': 200,
-                'body': f"Database '{new_db_name}' and table '{table_name}' created successfully."
-            }
-    except Exception as e:
-        print("Error:", str(e))
-        return {
-            'statusCode': 500,
-            'body': str(e)
-        }
-    finally:
-        connection.close()
+  #monitoring_interval = var.monitoring_interval
+  #monitoring_role_arn = aws_iam_role.rds_monitoring.arn
+
+  maintenance_window  = var.maintenance_window
+  deletion_protection = var.deletion_protection
+  skip_final_snapshot = var.skip_final_snapshot
+}
+
+resource "aws_s3_bucket" "name" {
+    bucket = var.bucket
+  
+}
